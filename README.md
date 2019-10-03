@@ -34,7 +34,7 @@ the application can be deployed to Heroku following these [instructions](doc/her
 
 ### Database Schema
 
-[An intended database squema](#)
+[An intended database squema](https://www.lucidchart.com/documents/embeddedchart/d1fb31ab-3db5-49e2-b20f-1996423547ff)
 
 ### web app demo
 
@@ -42,11 +42,11 @@ the application can be deployed to Heroku following these [instructions](doc/her
 
 ### Endpoints
 
-- GET /product
-- GET /product/:id
-- POST /product
-- PUT /product/:id
-- DELETE /product/:id
+- GET /api/products
+- GET /api/products/:id
+- POST /api/product
+- PUT /api/product/:id
+- DELETE /api/product/:id
 
 ## Time Spent and Lessons Learned
 
