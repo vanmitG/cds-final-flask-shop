@@ -1,4 +1,4 @@
-# CoderSchool Final Project - _CDS-Ecom-F_
+# CoderSchool Final Project - _CDS-Ecom-B_
 
 Created with love by: Van Mit
 
