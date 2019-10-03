@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+<div class="jumbotron">
+  <h1>Hello!!! Here is a list of all available User.</h1>
+  <div class="row">
+    {% for user in users %}
+    <div class="col">
+      <ul style="list-style: none">
+        <li>
+          <img style="border-radius: 50%" src="{{ user.img_url }}" alt="" />
+        </li>
+        <li>{{ user.user_name }}</li>
+        <li>{{ user.first_name }} {{ user.last_name }}</li>
+        <li>{{ user.email }}</li>
+        <li>{{ user.created_date }}</li>
+      </ul>
+    </div>
+
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
