@@ -1,4 +1,4 @@
-# CoderSchool Final Project - _CDS-Ecom-F_
+# CoderSchool Final Project - _CDS-Ecom-B_
 
 Created with love by: Van Mit
 
@@ -44,9 +44,9 @@ the application can be deployed to Heroku following these [instructions](doc/her
 
 - GET /api/products
 - GET /api/products/:id
-- POST /api/product
-- PUT /api/product/:id
-- DELETE /api/product/:id
+- POST /api/products
+- PUT /api/products/:id
+- DELETE /api/products/:id
 
 ## Time Spent and Lessons Learned
 
