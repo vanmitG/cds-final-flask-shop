@@ -38,7 +38,7 @@ the application can be deployed to Heroku following these [instructions](doc/her
 
 ### web app demo
 
-[rest backend](#)
+[rest backend](https://cds-ecom.herokuapp.com/)
 
 ### Endpoints
 
