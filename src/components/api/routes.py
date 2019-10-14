@@ -1,16 +1,15 @@
 from flask import jsonify, request
 from src import db
+# from src.components.api.blueprint import api_bpt
 from flask_cors import CORS
 from flask import Blueprint
 
-
 api_bpt = Blueprint('api', __name__)
-
-
 # Init Cors
 CORS(api_bpt)
 
-# Product Routes
+
+# Product Routes ********************************Product Routes ***********************Product Routes*****
 from src.models import Product, products_schema, product_schema  # noqa
 # Create a Product
 @api_bpt.route('/products', methods=['POST'])
@@ -104,9 +103,10 @@ def delete_product(id):
     db.session.commit()
 
     return product_schema.jsonify(product)
+# /Product Routes ********************************/Product Routes ***********************/Product Routes*****
 
 
-# User Routes
+# **** User Routes**************************** User Routes************************User Routes
 from src.models import User, users_schema, user_schema  # noqa
 # Create a User
 @api_bpt.route('/users', methods=['POST'])
@@ -138,7 +138,7 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return user_schema.jsonify(new_user.data)
+    return user_schema.jsonify(new_user)
 
 # Get All Users
 @api_bpt.route('/users', methods=['GET'])

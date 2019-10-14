@@ -12,12 +12,12 @@ from datetime import datetime
 class P_Item(db.Model):
     __tablename__ = 'p_item'
     id = db.Column(db.Integer, primary_key=True)
-    # product_id = db.Column(db.Integer, db.ForeignKey(
-    #     'product.id'), default=1, nullable=False)
-    # purchase_id = db.Column(db.Integer, db.ForeignKey(
-    #     'purchase.id'), default=1, nullable=False)
-    product_id = db.Column(db.Integer, default=1, nullable=False)
-    purchase_id = db.Column(db.Integer, default=1, nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey(
+        'product.id'), default=1, nullable=False)
+    purchase_id = db.Column(db.Integer, db.ForeignKey(
+        'purchase.id'), default=1, nullable=False)
+    # product_id = db.Column(db.Integer, default=1, nullable=False)
+    # purchase_id = db.Column(db.Integer, default=1, nullable=False)
     qty = db.Column(db.Float, default=0)
     created_date = db.Column(db.DateTime, default=datetime.now)
     updated_date = db.Column(db.DateTime, default=datetime.now)
@@ -64,8 +64,8 @@ class Product(db.Model):
     isActive = db.Column(db.Boolean, default=True)
     created_date = db.Column(db.DateTime, default=datetime.now)
     updated_date = db.Column(db.DateTime, default=datetime.now)
-    # purchase_items = db.relationship(
-    #     "P_Item", backref="product", lazy="dynamic")
+    purchase_items = db.relationship(
+        "P_Item", backref="product", lazy="dynamic")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -150,7 +150,8 @@ class Purchase(db.Model):
     created_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     updated_date = db.Column(db.DateTime, default=datetime.now)
     isActive = db.Column(db.Boolean, default=True)
-    # purchase_items = db.relationship("P_Item", backref="purchase", lazy="True")
+    purchase_items = db.relationship(
+        "P_Item", backref="purchase", lazy="dynamic")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
