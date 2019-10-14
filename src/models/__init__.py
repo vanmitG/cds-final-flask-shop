@@ -157,7 +157,7 @@ class Purchase(db.Model):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"Purchase {self.id} - {self.name}."
+        return f"Purchase {self.id} - Buyer:{self.buyer_id}."
 
 # Purchase Schema
 
