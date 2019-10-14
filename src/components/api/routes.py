@@ -1,7 +1,14 @@
 from flask import jsonify, request
 from src import db
+from flask_cors import CORS
 from flask import Blueprint
+
+
 api_bpt = Blueprint('api', __name__)
+
+
+# Init Cors
+CORS(api_bpt)
 
 # Product Routes
 from src.models import Product, products_schema, product_schema  # noqa

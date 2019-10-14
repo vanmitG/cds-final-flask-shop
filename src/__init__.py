@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_admin import Admin
+from flask_cors import CORS
 # from flask_login import LoginManager, current_user
 
 
@@ -26,6 +27,8 @@ ma = Marshmallow(app)
 migrate = Migrate(app, db)
 # Init Admin
 admin_mgr = Admin(app, template_mode='bootstrap3')
+# Init Cors
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # route for sites
 @app.route('/')
