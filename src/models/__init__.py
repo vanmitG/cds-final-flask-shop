@@ -6,7 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from datetime import datetime
 
 
-# purchase_item Class/Model
+# purchase_item Class/Model *************  # purchase_item Class/Model*******
 
 
 class P_Item(db.Model):
@@ -42,7 +42,7 @@ purchase_item_schema = purchase_itemSchema()
 purchase_items_schema = purchase_itemSchema(many=True)
 
 
-# Product Class/Model
+# Product Class/Model ********* # Product Class/Model *************
 
 
 class Product(db.Model):
@@ -87,7 +87,7 @@ product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
 
 
-# User Model
+# User Model*******# User Model*******# User Model***
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -138,7 +138,7 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 
-# Purchase Class/Model
+# Purchase Class/Model *************# Purchase Class/Model*********# Purchase Class/Model**********
 
 
 class Purchase(db.Model):
@@ -146,7 +146,8 @@ class Purchase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     buyer_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), default=1, nullable=False)
-    total = db.Column(db.Float, default=0, nullable=False)
+    total = db.Column(db.Float, default=0)
+    # total = db.Column(db.Float, default=0, nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     updated_date = db.Column(db.DateTime, default=datetime.now)
     isActive = db.Column(db.Boolean, default=True)
@@ -158,6 +159,13 @@ class Purchase(db.Model):
 
     def __repr__(self):
         return f"Purchase {self.id} - Buyer:{self.buyer_id}."
+
+    # calculate total of order
+    def set_total(self):
+        amt = 0
+        for item in self.purchase_items:
+            amt = amt + float(item.product.price)*item.qty
+        return amt
 
 # Purchase Schema
 
