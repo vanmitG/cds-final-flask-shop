@@ -7,6 +7,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_cors import CORS
+
 # from flask_login import LoginManager, current_user
 
 
@@ -28,7 +29,7 @@ migrate = Migrate(app, db)
 # Init Admin
 admin_mgr = Admin(app, template_mode='bootstrap3')
 # Init Cors
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # route for sites
 @app.route('/')
@@ -44,3 +45,6 @@ def admin():
 # api blue print
 from src.components.api.routes import api_bpt  # noqa
 app.register_blueprint(api_bpt, url_prefix='/api')
+
+# Init Cors
+# CORS(api_bpt)
