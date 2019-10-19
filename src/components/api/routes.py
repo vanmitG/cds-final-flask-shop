@@ -53,7 +53,7 @@ def add_product():
 def get_products():
     all_products = Product.query.all()
     result = products_schema.dump(all_products)
-    return jsonify({'products:': result})
+    return jsonify({'products': result})
 
 # Get Single Products
 @api_bpt.route('/products/<id>', methods=['GET'])
@@ -145,7 +145,7 @@ def add_user():
 def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
-    return jsonify({'users:': result})
+    return jsonify({'users': result})
 
 # # # Get Single Products
 # # @api_bpt.route('/products/<id>', methods=['GET'])
