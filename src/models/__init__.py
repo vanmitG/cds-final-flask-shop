@@ -127,8 +127,8 @@ class User(UserMixin, db.Model):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'onSale', 'img_src', 'prod_type', 'short_desc', 'price',
-                  'popupId', 'popupImg', 'isAvailable', 'popupCat', 'popupTag', 'popupDesc')
+        fields = ('id', 'name', 'onSale', 'img_src', 'prod_type', 'short_desc', 'price', 'popupId', 'popupImg', 'isAvailable', 'popupCat', 'popupTag', 'popupDesc'
+                  )
 
 
 # Init User schema
@@ -142,14 +142,14 @@ users_schema = UserSchema(many=True)
 class Purchase(db.Model):
     __tablename__ = 'purchase'
     id = db.Column(db.Integer, primary_key=True)
+    status_id = db.Column(db.Integer, db.ForeignKey(
+        'purchase_status.id'), default=1)
     buyer_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), default=1, nullable=False)
     total = db.Column(db.Float, default=0)
     created_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     updated_date = db.Column(db.DateTime, default=datetime.now)
     isActive = db.Column(db.Boolean, default=True)
-    status_id = db.Column(db.Integer, db.ForeignKey(
-        'purchase_status.id'), default=1)
     purchase_items = db.relationship(
         "P_Item", backref="purchase", lazy="dynamic")
 
@@ -170,8 +170,12 @@ class Purchase(db.Model):
 
 
 class PurchaseSchema(ma.ModelSchema):
+    # class PurchaseSchema(ma.Schema):
     class Meta:
         model = Purchase
+        # fields = (
+        #     'id', 'user', 'created_date', 'purchase_status', 'purchase_items', 'total'
+        # )
 
 
 # Init purchase schema

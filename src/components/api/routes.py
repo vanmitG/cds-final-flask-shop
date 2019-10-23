@@ -11,8 +11,6 @@ CORS(api_bpt)
 
 # Product Routes ********************************Product Routes ***********************Product Routes*****
 from src.models import Product, products_schema, product_schema  # noqa
-from src.models import Purchase, purchases_schema, purchase_schema  # noqa
-from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 # Create a Product
 @api_bpt.route('/products', methods=['POST'])
 def add_product():
@@ -175,6 +173,8 @@ def get_users():
 #     purchase: { ... }
 #     total: 120000
 # }
+from src.models import Purchase, purchases_schema, purchase_schema  # noqa
+from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 
 # Add Purchase
 @api_bpt.route('/purchases', methods=['POST'])
