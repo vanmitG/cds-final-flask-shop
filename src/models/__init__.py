@@ -16,8 +16,6 @@ class P_Item(db.Model):
         'product.id'), default=1, nullable=False)
     purchase_id = db.Column(db.Integer, db.ForeignKey(
         'purchase.id'), default=1, nullable=False)
-    # product_id = db.Column(db.Integer, default=1, nullable=False)
-    # purchase_id = db.Column(db.Integer, default=1, nullable=False)
     qty = db.Column(db.Float, default=0)
     created_date = db.Column(db.DateTime, default=datetime.now)
     updated_date = db.Column(db.DateTime, default=datetime.now)
@@ -129,8 +127,8 @@ class User(UserMixin, db.Model):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'onSale', 'img_src', 'prod_type', 'short_desc', 'price',
-                  'popupId', 'popupImg', 'isAvailable', 'popupCat', 'popupTag', 'popupDesc')
+        fields = ('id', 'name', 'onSale', 'img_src', 'prod_type', 'short_desc', 'price', 'popupId', 'popupImg', 'isAvailable', 'popupCat', 'popupTag', 'popupDesc'
+                  )
 
 
 # Init User schema
@@ -144,10 +142,11 @@ users_schema = UserSchema(many=True)
 class Purchase(db.Model):
     __tablename__ = 'purchase'
     id = db.Column(db.Integer, primary_key=True)
+    status_id = db.Column(db.Integer, db.ForeignKey(
+        'purchase_status.id'), default=1)
     buyer_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), default=1, nullable=False)
     total = db.Column(db.Float, default=0)
-    # total = db.Column(db.Float, default=0, nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now, nullable=False)
     updated_date = db.Column(db.DateTime, default=datetime.now)
     isActive = db.Column(db.Boolean, default=True)
@@ -171,13 +170,50 @@ class Purchase(db.Model):
 
 
 class PurchaseSchema(ma.ModelSchema):
+    # class PurchaseSchema(ma.Schema):
     class Meta:
         model = Purchase
+        # fields = (
+        #     'id', 'user', 'created_date', 'purchase_status', 'purchase_items', 'total'
+        # )
 
 
-# Init prduct schema
+# Init purchase schema
 purchase_schema = PurchaseSchema()
 purchases_schema = PurchaseSchema(many=True)
+
+
+# Purchase_status Class/Model *************# Purchase_status Class/Model*********# Purchase_status Class/Model**********
+
+
+class Purchase_status(db.Model):
+    __tablename__ = 'purchase_status'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    created_date = db.Column(db.DateTime, default=datetime.now)
+    updated_date = db.Column(db.DateTime, default=datetime.now)
+    isActive = db.Column(db.Boolean, default=True)
+    purchase_statuses = db.relationship(
+        "Purchase", backref="purchase_status", lazy="dynamic")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def __repr__(self):
+        return f"Purchase_status {self.id} - {self.name}."
+
+
+# Purchase_status Schema
+
+
+class Purchase_statusSchema(ma.ModelSchema):
+    class Meta:
+        model = Purchase_status
+
+
+# Init purchase_status schema
+purchase_status_schema = Purchase_statusSchema()
+purchase_statuses_schema = Purchase_statusSchema(many=True)
 
 
 # Init admin view
@@ -186,3 +222,4 @@ admin_mgr.add_view(ModelView(User, db.session))
 admin_mgr.add_view(ModelView(Product, db.session))
 admin_mgr.add_view(ModelView(Purchase, db.session))
 admin_mgr.add_view(ModelView(P_Item, db.session))
+admin_mgr.add_view(ModelView(Purchase_status, db.session))

@@ -11,8 +11,6 @@ CORS(api_bpt)
 
 # Product Routes ********************************Product Routes ***********************Product Routes*****
 from src.models import Product, products_schema, product_schema  # noqa
-from src.models import Purchase, purchases_schema, purchase_schema  # noqa
-from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 # Create a Product
 @api_bpt.route('/products', methods=['POST'])
 def add_product():
@@ -175,11 +173,17 @@ def get_users():
 #     purchase: { ... }
 #     total: 120000
 # }
+from src.models import Purchase, purchases_schema, purchase_schema  # noqa
+from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 
+# Add Purchase
 @api_bpt.route('/purchases', methods=['POST'])
 def add_purchase():
     buyer_id = request.json["buyer_id"]
-    new_purchase = Purchase(buyer_id=buyer_id)
+    new_purchase = Purchase(
+        buyer_id=buyer_id,
+        status_id=1
+    )
     # commit new_purchase to database to get purchase id
     db.session.add(new_purchase)
     db.session.commit()
@@ -214,7 +218,7 @@ def add_purchase():
     resp = purchase_schema.dump(new_purchase)
     return jsonify({'msg': 'Your purchase was received', 'purchase': resp})
 
-# Get All Users
+# Get All Purchases
 @api_bpt.route('/purchases', methods=['GET'])
 def get_purchase():
     all_purchases = Purchase.query.all()
