@@ -143,7 +143,7 @@ class Purchase(db.Model):
     __tablename__ = 'purchase'
     id = db.Column(db.Integer, primary_key=True)
     status_id = db.Column(db.Integer, db.ForeignKey(
-        'purchase_status.id'), default=1)
+        'purchase_status.id'), default=1, nullable=False)
     buyer_id = db.Column(db.Integer, db.ForeignKey(
         'user.id'), default=1, nullable=False)
     total = db.Column(db.Float, default=0)
@@ -152,6 +152,8 @@ class Purchase(db.Model):
     isActive = db.Column(db.Boolean, default=True)
     purchase_items = db.relationship(
         "P_Item", backref="purchase", lazy="dynamic")
+
+# TODO keep track of time when status change to determine timelapse between status. 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -169,13 +171,13 @@ class Purchase(db.Model):
 # Purchase Schema
 
 
-class PurchaseSchema(ma.ModelSchema):
-    # class PurchaseSchema(ma.Schema):
+# class PurchaseSchema(ma.ModelSchema):
+#     class Meta:
+#         model = Purchase
+class PurchaseSchema(ma.Schema):
     class Meta:
-        model = Purchase
-        # fields = (
-        #     'id', 'user', 'created_date', 'purchase_status', 'purchase_items', 'total'
-        # )
+        fields = ('id', 'buyer_id', 'created_date', 'updated_date',
+                  'status_id', 'total')
 
 
 # Init purchase schema
@@ -200,7 +202,7 @@ class Purchase_status(db.Model):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"Purchase_status {self.id} - {self.name}."
+        return f"Purchase_status : {self.name}."
 
 
 # Purchase_status Schema

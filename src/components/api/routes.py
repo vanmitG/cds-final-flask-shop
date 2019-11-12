@@ -1,15 +1,17 @@
+from datetime import datetime
 from flask import jsonify, request
 from src import db
 # from src.components.api.blueprint import api_bpt
 from flask_cors import CORS
 from flask import Blueprint
 
+
 api_bpt = Blueprint('api', __name__)
 # Init Cors
 CORS(api_bpt)
 
 
-# Product Routes ********************************Product Routes ***********************Product Routes*****
+# Product Routes *******************Product Routes ************ ********** *Product Routes* ****
 from src.models import Product, products_schema, product_schema  # noqa
 # Create a Product
 @api_bpt.route('/products', methods=['POST'])
@@ -146,9 +148,10 @@ def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify({'users': result})
+# ****/User Routes****************************/User Routes************************/User Routes
 
 
-# purchase routes************
+# purchase routes************purchase routes************purchase routes************
 
 # Call this route when buying items (e.g. creating a purchase).
 # Input API parameters:
@@ -224,3 +227,34 @@ def get_purchase():
     all_purchases = Purchase.query.all()
     result = purchases_schema.dump(all_purchases)
     return jsonify({'purchases': result})
+
+# Get Single Purchase
+@api_bpt.route('/purchases/<purchase_id>', methods=['GET'])
+def get_single_purchase(purchase_id):
+    purchase = Purchase.query.get_or_404(purchase_id)
+    result = purchase_schema.dump(purchase)
+    return jsonify({'purchases': result})
+
+
+# Update a purchase's status
+@api_bpt.route('/purchases/<purchase_id>/<status>', methods=['GET', 'PUT'])
+def update_purchase_status(purchase_id, status):
+    purchase = Purchase.query.get_or_404(purchase_id)
+
+    # get status data from api call
+    if status == 'process':
+        status_id = 2
+    elif status == 'deliver':
+        status_id = 3
+    elif status == 'cancel':
+        status_id = 4
+    else:
+        status_id = 1
+
+    # change purchase_status and update time
+    purchase.status_id = status_id
+    purchase.updated_date = datetime.now()
+
+    db.session.commit()
+
+    return purchase_schema.jsonify(purchase)
