@@ -226,8 +226,16 @@ def add_purchase():
 @api_bpt.route('/purchases', methods=['GET'])
 def get_purchase():
     all_purchases = Purchase.query.all()
-    result = purchases_schema.dump(all_purchases)
-    return jsonify({'purchases': result})
+    results = []
+    for purchase in all_purchases:
+        single_purchase = purchase_schema.dump(purchase)
+        buyer = purchase.user.user_name
+        status = purchase.purchase_status.name
+        result = {'purchase': single_purchase,
+                  'buyer': buyer, 'status': status}
+        results.append(result)
+    # result = purchases_schema.dump(all_purchases)
+    return jsonify(results)
 
 # Get Single Purchase
 @api_bpt.route('/purchases/<purchase_id>', methods=['GET'])
@@ -243,7 +251,6 @@ def get_single_purchase(purchase_id):
 def update_purchase_status(purchase_id, status):
     purchase = Purchase.query.get_or_404(purchase_id)
     P_status = Purchase_status.query.filter_by(name=status).first_or_404()
-
     # check if purchase is canceled or completed
     if purchase.purchase_status.name == 'canceled' or purchase.purchase_status.name == 'completed':
         return jsonify({'msg': 'Purchase was completed or canceled. Can not change status'})

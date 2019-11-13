@@ -168,12 +168,6 @@ class Purchase(db.Model):
             amt = amt + float(item.product.price)*item.qty
         return amt
 
-    # set new purchase status
-    # def is_canceled(self):
-    #     if self.purchase_status.name == 'canceled':
-    #         return True
-    #     else:
-    #         return False
 
 # Purchase Schema
 
