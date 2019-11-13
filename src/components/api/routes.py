@@ -177,6 +177,7 @@ def get_users():
 #     total: 120000
 # }
 from src.models import Purchase, purchases_schema, purchase_schema  # noqa
+from src.models import Purchase_status, purchase_statuses_schema, purchase_status_schema  # noqa
 from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 
 # Add Purchase
@@ -233,28 +234,25 @@ def get_purchase():
 def get_single_purchase(purchase_id):
     purchase = Purchase.query.get_or_404(purchase_id)
     result = purchase_schema.dump(purchase)
-    return jsonify({'purchases': result})
+    buyer = purchase.user.user_name
+    return jsonify({'purchase': result, 'buyer': buyer, 'status': purchase.purchase_status.name})
 
 
 # Update a purchase's status
 @api_bpt.route('/purchases/<purchase_id>/<status>', methods=['GET', 'PUT'])
 def update_purchase_status(purchase_id, status):
     purchase = Purchase.query.get_or_404(purchase_id)
+    P_status = Purchase_status.query.filter_by(name=status).first_or_404()
 
-    # get status data from api call
-    if status == 'process':
-        status_id = 2
-    elif status == 'deliver':
-        status_id = 3
-    elif status == 'cancel':
-        status_id = 4
+    # check if purchase is canceled or completed
+    if purchase.purchase_status.name == 'canceled' or purchase.purchase_status.name == 'completed':
+        return jsonify({'msg': 'Purchase was completed or canceled. Can not change status'})
     else:
-        status_id = 1
-
-    # change purchase_status and update time
-    purchase.status_id = status_id
-    purchase.updated_date = datetime.now()
-
-    db.session.commit()
-
-    return purchase_schema.jsonify(purchase)
+        # change purchase_status and update time
+        purchase.status_id = P_status.id
+        purchase.updated_date = datetime.now()
+        db.session.commit()
+        result = purchase_schema.dump(purchase)
+        new_status = purchase.purchase_status.name
+        buyer = purchase.user.user_name
+        return jsonify({'purchase': result, 'buyer': buyer, 'status': new_status})

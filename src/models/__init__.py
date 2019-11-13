@@ -153,7 +153,7 @@ class Purchase(db.Model):
     purchase_items = db.relationship(
         "P_Item", backref="purchase", lazy="dynamic")
 
-# TODO keep track of time when status change to determine timelapse between status. 
+# TODO keep track of time when status change to determine timelapse between status.
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -168,16 +168,23 @@ class Purchase(db.Model):
             amt = amt + float(item.product.price)*item.qty
         return amt
 
+    # set new purchase status
+    # def is_canceled(self):
+    #     if self.purchase_status.name == 'canceled':
+    #         return True
+    #     else:
+    #         return False
+
 # Purchase Schema
 
 
-# class PurchaseSchema(ma.ModelSchema):
-#     class Meta:
-#         model = Purchase
-class PurchaseSchema(ma.Schema):
+class PurchaseSchema(ma.ModelSchema):
     class Meta:
-        fields = ('id', 'buyer_id', 'created_date', 'updated_date',
-                  'status_id', 'total')
+        model = Purchase
+# class PurchaseSchema(ma.Schema):
+#     class Meta:
+#         fields = ('id', 'buyer_id', 'created_date', 'updated_date',
+#                   'status_id', 'total')
 
 
 # Init purchase schema
