@@ -1,15 +1,17 @@
+from datetime import datetime
 from flask import jsonify, request
 from src import db
 # from src.components.api.blueprint import api_bpt
 from flask_cors import CORS
 from flask import Blueprint
 
+
 api_bpt = Blueprint('api', __name__)
 # Init Cors
 CORS(api_bpt)
 
 
-# Product Routes ********************************Product Routes ***********************Product Routes*****
+# Product Routes *******************Product Routes ************ ********** *Product Routes* ****
 from src.models import Product, products_schema, product_schema  # noqa
 # Create a Product
 @api_bpt.route('/products', methods=['POST'])
@@ -146,9 +148,10 @@ def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify({'users': result})
+# ****/User Routes****************************/User Routes************************/User Routes
 
 
-# purchase routes************
+# purchase routes************purchase routes************purchase routes************
 
 # Call this route when buying items (e.g. creating a purchase).
 # Input API parameters:
@@ -174,6 +177,7 @@ def get_users():
 #     total: 120000
 # }
 from src.models import Purchase, purchases_schema, purchase_schema  # noqa
+from src.models import Purchase_status, purchase_statuses_schema, purchase_status_schema  # noqa
 from src.models import P_Item, purchase_items_schema, purchase_item_schema  # noqa
 
 # Add Purchase
@@ -222,5 +226,40 @@ def add_purchase():
 @api_bpt.route('/purchases', methods=['GET'])
 def get_purchase():
     all_purchases = Purchase.query.all()
-    result = purchases_schema.dump(all_purchases)
-    return jsonify({'purchases': result})
+    results = []
+    for purchase in all_purchases:
+        single_purchase = purchase_schema.dump(purchase)
+        buyer = purchase.user.user_name
+        status = purchase.purchase_status.name
+        result = {'purchase': single_purchase,
+                  'buyer': buyer, 'status': status}
+        results.append(result)
+    # result = purchases_schema.dump(all_purchases)
+    return jsonify(results)
+
+# Get Single Purchase
+@api_bpt.route('/purchases/<purchase_id>', methods=['GET'])
+def get_single_purchase(purchase_id):
+    purchase = Purchase.query.get_or_404(purchase_id)
+    result = purchase_schema.dump(purchase)
+    buyer = purchase.user.user_name
+    return jsonify({'purchase': result, 'buyer': buyer, 'status': purchase.purchase_status.name})
+
+
+# Update a purchase's status
+@api_bpt.route('/purchases/<purchase_id>/<status>', methods=['GET', 'PUT'])
+def update_purchase_status(purchase_id, status):
+    purchase = Purchase.query.get_or_404(purchase_id)
+    P_status = Purchase_status.query.filter_by(name=status).first_or_404()
+    # check if purchase is canceled or completed
+    if purchase.purchase_status.name == 'canceled' or purchase.purchase_status.name == 'completed':
+        return jsonify({'msg': 'Purchase was completed or canceled. Can not change status'})
+    else:
+        # change purchase_status and update time
+        purchase.status_id = P_status.id
+        purchase.updated_date = datetime.now()
+        db.session.commit()
+        result = purchase_schema.dump(purchase)
+        new_status = purchase.purchase_status.name
+        buyer = purchase.user.user_name
+        return jsonify({'purchase': result, 'buyer': buyer, 'status': new_status})
